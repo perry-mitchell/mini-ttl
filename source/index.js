@@ -6,11 +6,11 @@ class TTLValue extends EventEmitter {
         super();
         this._value = value;
         this._expired = false;
-        this._ttl = ttl;
+        this.ttl = ttl;
         this._timer = null;
         this.expiryValue = expiryValue;
         this.touchOnRead = touchOnRead;
-        this._touch();
+        this.touch();
     }
 
     get expired() {
@@ -23,7 +23,7 @@ class TTLValue extends EventEmitter {
 
     get value() {
         if (this.touchOnRead) {
-            this._touch();
+            this.touch();
         }
         return this._value;
     }
@@ -31,7 +31,7 @@ class TTLValue extends EventEmitter {
     set ttl(timeToLive) {
         if (timeToLive === null) {
             this._ttl = null;
-            this._touch();
+            this.touch();
             return;
         }
         const milliseconds = typeof timeToLive === "string" ? ms(timeToLive) : timeToLive;
@@ -41,14 +41,20 @@ class TTLValue extends EventEmitter {
             );
         }
         this._ttl = milliseconds;
-        this._touch();
+        this.touch();
     }
 
     set value(newValue) {
         this._value = newValue;
         this._expired = false;
-        this._touch();
+        this.touch();
         this.emit("valueSet");
+    }
+
+    expire() {
+        this._expired = true;
+        this._value = this.expiryValue;
+        this.emit("valueExpired");
     }
 
     getValue() {
@@ -65,13 +71,7 @@ class TTLValue extends EventEmitter {
         if (!this.ttl || this.expired) {
             return;
         }
-        this._timer = setTimeout(() => this._expire(), this.ttl);
-    }
-
-    _expire() {
-        this._expired = true;
-        this._value = this.expiryValue;
-        this.emit("valueExpired");
+        this._timer = setTimeout(() => this.expire(), this.ttl);
     }
 }
 
