@@ -11,6 +11,8 @@ describe("TTLValue", function() {
         val2.on("valueExpired", spy2);
         return sleep(300).then(() => {
             expect(spy1.calledBefore(spy2)).to.be.true;
+            expect(val1.expired).to.be.true;
+            expect(val2.expired).to.be.true;
             expect(val1.value).to.be.null;
             expect(val2.value).to.be.null;
         });

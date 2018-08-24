@@ -6,7 +6,7 @@ class TTLValue extends EventEmitter {
         super();
         this._value = value;
         this._expired = false;
-        this.ttl = ttl;
+        this._setTTL(ttl);
         this._timer = null;
         this.expiryValue = expiryValue;
         this.touchOnRead = touchOnRead;
@@ -29,18 +29,7 @@ class TTLValue extends EventEmitter {
     }
 
     set ttl(timeToLive) {
-        if (timeToLive === null) {
-            this._ttl = null;
-            this.touch();
-            return;
-        }
-        const milliseconds = typeof timeToLive === "string" ? ms(timeToLive) : timeToLive;
-        if (isNaN(milliseconds) || milliseconds <= 0) {
-            throw new Error(
-                `Invalid value for TTL: Expected a number or time-string: ${timeToLive}`
-            );
-        }
-        this._ttl = milliseconds;
+        this._setTTL(timeToLive);
         this.touch();
     }
 
@@ -52,6 +41,7 @@ class TTLValue extends EventEmitter {
     }
 
     expire() {
+        this._stopTimer();
         this._expired = true;
         this._value = this.expiryValue;
         this.emit("valueExpired");
@@ -66,12 +56,30 @@ class TTLValue extends EventEmitter {
     }
 
     touch() {
-        clearTimeout(this._timer);
-        this._timer = null;
-        if (!this.ttl || this.expired) {
+        this._stopTimer();
+        if (!this._ttl || this.expired) {
             return;
         }
-        this._timer = setTimeout(() => this.expire(), this.ttl);
+        this._timer = setTimeout(() => this.expire(), this._ttl);
+    }
+
+    _setTTL(timeToLive) {
+        if (timeToLive === null) {
+            this._ttl = null;
+            return;
+        }
+        const milliseconds = typeof timeToLive === "string" ? ms(timeToLive) : timeToLive;
+        if (isNaN(milliseconds) || milliseconds <= 0) {
+            throw new Error(
+                `Invalid value for TTL: Expected a number or time-string: ${timeToLive}`
+            );
+        }
+        this._ttl = milliseconds;
+    }
+
+    _stopTimer() {
+        clearTimeout(this._timer);
+        this._timer = null;
     }
 }
 
