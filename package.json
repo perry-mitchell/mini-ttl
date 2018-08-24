@@ -1,0 +1,33 @@
+{
+  "name": "mini-ttl",
+  "version": "0.0.0",
+  "description": "Miniature temporary value creator",
+  "main": "source/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perry-mitchell/mini-ttl.git"
+  },
+  "keywords": [
+    "ttl",
+    "expiry",
+    "temporary",
+    "value",
+    "store"
+  ],
+  "author": "Perry Mitchell <perry@perrymitchell.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/perry-mitchell/mini-ttl/issues"
+  },
+  "homepage": "https://github.com/perry-mitchell/mini-ttl#readme",
+  "dependencies": {
+    "eventemitter3": "^3.1.0",
+    "ms": "^2.1.1"
+  }
+}
