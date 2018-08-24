@@ -48,6 +48,22 @@ describe("TTLValue", function() {
         });
     });
 
+    describe("expire", function() {
+        it("expires the value", function() {
+            const val = new TTLValue(1);
+            expect(val.expired).to.be.false;
+            val.expire();
+            expect(val.expired).to.be.true;
+        });
+
+        it("stops the timer", function() {
+            const val = new TTLValue(1, "1m");
+            expect(val._timer).to.not.be.null;
+            val.expire();
+            expect(val._timer).to.be.null;
+        });
+    });
+
     describe("getValue", function() {
         it("returns the value", function() {
             const val = new TTLValue(false);
