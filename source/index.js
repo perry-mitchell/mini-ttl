@@ -36,7 +36,9 @@ class TTLValue extends EventEmitter {
         }
         const milliseconds = typeof timeToLive === "string" ? ms(timeToLive) : timeToLive;
         if (isNaN(milliseconds) || milliseconds <= 0) {
-            throw new Error(`Invalid value for TTL: Expected a number or time-string: ${timeToLive}`);
+            throw new Error(
+                `Invalid value for TTL: Expected a number or time-string: ${timeToLive}`
+            );
         }
         this._ttl = milliseconds;
         this._touch();
