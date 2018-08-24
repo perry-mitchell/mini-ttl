@@ -3,11 +3,20 @@
   "version": "0.0.0",
   "description": "Miniature temporary value creator",
   "main": "source/index.js",
+  "scripts": {
+    "format": "prettier --write '{source,test}/**/*.js'",
+    "precommit": "lint-staged",
+    "test": "npm run test:format",
+    "test:format": "prettier-check '{source,test}/**/*.js'"
+  },
+  "lint-staged": {
+    "{source,test}/**/*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "directories": {
     "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -29,5 +38,11 @@
   "dependencies": {
     "eventemitter3": "^3.1.0",
     "ms": "^2.1.1"
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "prettier-check": "^2.0.0"
   }
 }
